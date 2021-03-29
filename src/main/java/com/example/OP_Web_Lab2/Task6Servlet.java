@@ -1,6 +1,7 @@
 package com.example.OP_Web_Lab2;
 
 import java.io.*;
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.lang.Math;
@@ -9,27 +10,24 @@ import java.lang.Math;
 public class Task6Servlet extends HttpServlet {
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        double a,b,c,d,result;
         try {
-            Double a = Double.parseDouble(request.getParameter("a"));
-            Double b = Double.parseDouble(request.getParameter("a"));
-            Double c = Double.parseDouble(request.getParameter("a"));
-            Double d = Double.parseDouble(request.getParameter("a"));
+            a = Double.parseDouble(request.getParameter("a"));
+            b = Double.parseDouble(request.getParameter("b"));
+            c = Double.parseDouble(request.getParameter("c"));
+            d = Double.parseDouble(request.getParameter("d"));
 
-            try (PrintWriter out = response.getWriter()) {
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println(" <head><title>Result</title></head>");
-                out.println(" <body>");
-                out.println("<h1> result = ");
-                double result = (3 * ((Math.log10(Math.abs(b/a)))) + Math.sqrt(Math.sin(c) + Math.pow(Math.E, d)));
-                out.println(result);
-                out.println("</body>");
-                out.println("</html>");
-            }
-
+            result = (3 * ((Math.log10(Math.abs(b/a)))) + Math.sqrt(Math.sin(c) + Math.pow(Math.E, d)));
+            request.getSession().setMaxInactiveInterval(60*48*60);
+            request.setAttribute("res",result);
+            request.getSession().setAttribute("a",a);
+            request.getSession().setAttribute("b",b);
+            request.getSession().setAttribute("c",c);
+            request.getSession().setAttribute("d",d);
         } catch (NumberFormatException e) {
-            response.sendError(400);
+            request.setAttribute("res","Error");
         }
+        getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }
